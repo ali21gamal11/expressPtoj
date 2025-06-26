@@ -1,6 +1,7 @@
 const exp = require("express");
 const auth = exp.Router();
 const joi = require('joi');
+const { Author } = require('../models/Author')
 
 const authors = [
     {id:1, name:"ali" ,age:20},
@@ -18,8 +19,14 @@ const authors = [
  * @method GET
  * @access public
  */
-auth.get("/",(req,res)=>{
-    res.status(200).json(authors);
+auth.get("/", async (req,res)=>{
+    try{
+        const allauth = await Author.find().sort({name:1,age:-1}).select("name age");
+        res.status(200).json(allauth);
+    }catch(error){
+        conole.log("somthing went wrong, Error:",error);
+        res.status(500).json({message:"somthing went wrong, Error:",error})
+    }
 })
 
 
@@ -29,23 +36,29 @@ auth.get("/",(req,res)=>{
  * @method POST
  * @access public
  */
-auth.post("/",(req,res)=>{
-    const author = {
-        id:authors.length+1,
-        name:req.body.name,
-        age:parseInt(req.body.age)
-    }
+auth.post("/", async (req,res)=>{
+
 
     const { error } = addv(req.body);
-    if(error){
-        return res.status(400).json({message:error.details[0].message});
-    }
+        if(error){
+            return res.status(400).json({message:error.details[0].message});
+        }
 
-    console.log(author);
-    authors.push(author);
-    res.status(201).json(author);
+    try{
+        const author = new Author ({
+        name:req.body.name,
+        age:parseInt(req.body.age)
+    });
+
+    const result = await author.save()
+    console.log(result);
+    res.status(201).json(result);
     
 
+    }catch(error){
+        console.log("somthing is wrong, Error:",error);
+        res.status(500).json({massage:"somthing is wrong"})
+    }
 })
 
 /**
@@ -55,15 +68,23 @@ auth.post("/",(req,res)=>{
  * @access public
  */
 
-auth.put("/",(req,res)=>{
-    const { error } = editv(req.body)
+auth.put("/:id", async (req,res)=>{
+    try{
+        const { error } = editv(req.body)
         if(error){
             return res.status(200).json({message:error.details[0].message});
         }
 
-        const author = authors.find(b => b.id === parseInt(req.body.id));
-        if(author){res.status(200).send("author has been updated")}
-        else{res.status(404).send("author not found")}
+        const author = await Author.findByIdAndUpdate(req.params.id,{$set:{
+            name:req.body.name,
+            age:req.body.age
+        }},{ new:true });
+
+        res.status(200).json({author});
+    }
+    catch(error){
+        res.status(500).json({message:"somting went wrong"});
+    }
 
     
 })
@@ -75,15 +96,22 @@ auth.put("/",(req,res)=>{
  * @access public
  */
 
-auth.get("/:id",(req,res)=>{
-    const author = authors.find(b => b.id === parseInt(req.params.id));
-    if(author){
-        console.log(author)
-        res.status(200).json(author);
+auth.get("/:id",async (req,res)=>{
+
+    try{
+        const author = await Author.findById(req.params.id);
+        if(author){
+            console.log(author)
+            res.status(200).json(author);
+        }
+        else{
+            res.status(404).send("author not found")
+        }
+    }catch(error){
+        console.log("somthing is wrong, Error:",error);
+        res.status(500).json({massage:"somthing is wrong"});
     }
-    else{
-        res.status(404).send("author not found")
-    }
+    
 })
 
 
@@ -95,37 +123,35 @@ auth.get("/:id",(req,res)=>{
  * @access public
  */
 
-auth.delete("/:id",(req,res)=>{
-    const { error } = editv(req.body)
+auth.delete("/:id",async (req,res)=>{
+    try{
+        const { error } = editv(req.body)
         if(error){
             return res.status(200).json({message:error.details[0].message});
+            console.log(1);
         }
-
-        const author = authors.find(b => b.id === parseInt(req.params.id));
-        if(author){res.status(200).send("author has been deleted")}
-        else{res.status(404).send("author not found")}
+        console.log(2);
+        const author = await Author.findById(req.params.id);
+        if(author){
+            await Author.findByIdAndDelete(req.params.id);
+            res.status(200).json({message:"author has been deleted"});
+            console.log(3);
+        }
+        else{
+            res.status(404).json({message:"author not found"});
+            console.log(4);
+        }
+    }catch(error){
+        console.log("somthing is wrong, Error:",error);
+        res.status(500).json({massage:"somthing went wrong"})
+        console.log(5);
+    }
 
     
 })
 
 
-function addv(obj){
-    const schema = joi.object({
-        name:joi.string().min(3).max(20).trim().required(),
-        age:joi.number().min(18).max(120).required()
-    })
-    return schema.validate(obj);
-}
 
-
-function editv(obj){
-    const schema = joi.object({
-        id: joi.number().required(),
-        name:joi.string().min(3).max(20).trim(),
-        age:joi.number().min(18).max(120)
-    })
-    return schema.validate(obj);
-}
 
 
 

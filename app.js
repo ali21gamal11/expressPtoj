@@ -1,6 +1,12 @@
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
 
+
+
+mongoose.connect("mongodb://localhost:27018/bookstore")
+    .then(()=>{console.log("connected to BookStore")})
+    .catch((error)=>{console.log("fail to connect >> error: ",error)});
 app.use(express.json());
 const bookpath = require('./routes/book')
 const authorspath = require('./routes/authors')
