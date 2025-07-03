@@ -1,7 +1,7 @@
 const exp = require("express");
 const auth = exp.Router();
-const joi = require('joi');
-const { Author } = require('../models/Author')
+
+const { Author,addv,editv } = require('../models/Author')
 
 const authors = [
     {id:1, name:"ali" ,age:20},
@@ -125,12 +125,6 @@ auth.get("/:id",async (req,res)=>{
 
 auth.delete("/:id",async (req,res)=>{
     try{
-        const { error } = editv(req.body)
-        if(error){
-            return res.status(200).json({message:error.details[0].message});
-            console.log(1);
-        }
-        console.log(2);
         const author = await Author.findById(req.params.id);
         if(author){
             await Author.findByIdAndDelete(req.params.id);
