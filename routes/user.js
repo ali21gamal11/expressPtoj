@@ -18,6 +18,9 @@ router.put("/:id",verifyToken,asyncHandler(async(req,res)=>{
         return res.status(400).json({message: error.details[0].message});
     }
 
+    if(req.user.id  != req.params.id ){
+        return res.status(403).json({message : "you are not allowed , you only can ubdate your profile"});
+    }
     if(req.body.password){
         const salt = await bcrypt.genSalt(10);
         req.body.password = await bcrybt.hash(req.body.password,salt);
