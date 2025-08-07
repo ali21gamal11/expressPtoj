@@ -64,7 +64,7 @@ function validateUpdateUser (obj){
         email:joi.string().email().trim().min(5).max(200),
         password:joi.string().trim().min(8).max(100),
         username:joi.string().trim().min(2).max(50),
-        age:joi.number().trim().min(18).max(120),
+        age:joi.number().min(18).max(120),
         isAdmin:joi.bool()
     })
     return schema.validate(obj);

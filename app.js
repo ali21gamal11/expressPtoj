@@ -7,6 +7,7 @@ dotenv.config();
 const bookpath = require('./routes/book')
 const authorspath = require('./routes/authors')
 const autpath  = require('./routes/auth')
+const userpath  = require('./routes/user')
 
 mongoose.connect(process.env.MONGO_URI)
     .then(()=>{console.log("connected to BookStore")})
@@ -17,6 +18,7 @@ app.use(logger);
 app.use("/api/books",bookpath);
 app.use("/api/authors",authorspath);
 app.use("/api/auth",autpath);
+app.use("/api/user",userpath);
 
 
 
