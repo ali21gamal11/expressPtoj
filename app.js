@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const mongoose = require('mongoose');
+
 const dotenv = require("dotenv");
 const logger = require('./middleware/logger')
 dotenv.config();
@@ -9,9 +9,8 @@ const authorspath = require('./routes/authors')
 const autpath  = require('./routes/auth')
 const userpath  = require('./routes/user')
 
-mongoose.connect(process.env.MONGO_URI)
-    .then(()=>{console.log("connected to BookStore")})
-    .catch((error)=>{console.log("fail to connect >> error: ",error)});
+const connect = require("./config/connect") 
+connect();
 app.use(express.json());
 app.use(logger);
 

@@ -29,7 +29,7 @@ router.post("/login",asyncHandler(async(req,res)=>{
     }
 
     
-    const token = jwt.sign({id:user._id, username:user.username},"secKay");
+    const token = jwt.sign({id:user._id, username:user.username,isAdmin:user.isAdmin},process.env.secKay);
     const { password  , ...other } = user._doc;
 
     
@@ -65,7 +65,7 @@ router.post("/register",asyncHandler(async(req,res)=>{
     })
 
     const result = await user.save();
-    const token = jwt.sign({id:user._id, username:user.username},process.env.secKay);
+    const token = jwt.sign({id:user._id, username:user.username,isAdmin:user.isAdmin},process.env.secKay);
     const { password  , ...other } = result._doc;
 
     

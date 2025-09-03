@@ -46,7 +46,7 @@ function validateNewUser (obj){
         password:joi.string().required().trim().min(8).max(100),
         username:joi.string().required().trim().min(2).max(50),
         age:joi.number().required().min(18).max(120),
-        isAdmin:joi.bool()
+        
     })
     return schema.validate(obj);
 }
@@ -65,7 +65,7 @@ function validateUpdateUser (obj){
         password:joi.string().trim().min(8).max(100),
         username:joi.string().trim().min(2).max(50),
         age:joi.number().min(18).max(120),
-        isAdmin:joi.bool()
+        
     })
     return schema.validate(obj);
 }

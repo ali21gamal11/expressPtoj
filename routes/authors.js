@@ -1,6 +1,6 @@
 const exp = require("express");
 const auth = exp.Router();
-
+const { AuthorizeTheAdmin}  = require('../middleware/verifyToken');
 const { Author,addv,editv } = require('../models/Author')
 
 const authors = [
@@ -34,9 +34,9 @@ auth.get("/", async (req,res)=>{
  * @desc add a new author 
  * @route /api/authors
  * @method POST
- * @access public
+ * @access private only admin
  */
-auth.post("/", async (req,res)=>{
+auth.post("/",AuthorizeTheAdmin, async (req,res)=>{
 
 
     const { error } = addv(req.body);
@@ -65,10 +65,10 @@ auth.post("/", async (req,res)=>{
  * @desc update author by id
  * @route /api/authors
  * @method PUT
- * @access public
+ * @access private only admin
  */
 
-auth.put("/:id", async (req,res)=>{
+auth.put("/:id", AuthorizeTheAdmin,async (req,res)=>{
     try{
         const { error } = editv(req.body)
         if(error){
@@ -120,10 +120,10 @@ auth.get("/:id",async (req,res)=>{
  * @desc delete author by id
  * @route /api/authors
  * @method DELETE
- * @access public
+ * @access private only admin
  */
 
-auth.delete("/:id",async (req,res)=>{
+auth.delete("/:id",AuthorizeTheAdmin,async (req,res)=>{
     try{
         const author = await Author.findById(req.params.id);
         if(author){

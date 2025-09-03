@@ -2,6 +2,7 @@ const exp = require("express");
 const router = exp.Router();
 const asyncHandler = require('express-async-handler');
 const { Book,efun,vfun } = require('../models/Book')
+const { AuthorizeTheAdmin}  = require('../middleware/verifyToken');
 
 
 // const books = [
@@ -46,9 +47,9 @@ router.get("/",asyncHandler( async(req,res)=>{
  * @desc add a new book
  * @route /api/books
  * @method POST
- * @access public
+ * @access private only admin
  */
-router.post("/",asyncHandler(async(req,res)=>{
+router.post("/",AuthorizeTheAdmin,asyncHandler(async(req,res)=>{
     
     
 
@@ -89,9 +90,9 @@ router.get("/:id",asyncHandler(async(req,res)=>{
  * @desc edit a book by id
  * @route /api/books:id
  * @method PUT
- * @access public
+ * @access private only admin
  */
-router.put("/:id",asyncHandler(async(req,res)=>{
+router.put("/:id",AuthorizeTheAdmin,asyncHandler(async(req,res)=>{
     const { error } = efun(req.body);
     if(error){
         res.status(400).json({message:error.details[0].message});
@@ -120,9 +121,9 @@ router.put("/:id",asyncHandler(async(req,res)=>{
  * @desc delete a book by id
  * @route api/books:id
  * @method DELETE
- * @access public
+ * @access private only admin
  */
-router.delete("/:id",asyncHandler(async(req,res)=>{
+router.delete("/:id",AuthorizeTheAdmin,asyncHandler(async(req,res)=>{
 
     const book = await Book.findById(req.params.id)
     if(book){
