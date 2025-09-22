@@ -71,4 +71,9 @@ router.post("/register",asyncHandler(async(req,res)=>{
     
     res.status(201).json({...other,token});
 }));
+
+
+
+
+
 module.exports = router;

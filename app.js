@@ -1,9 +1,9 @@
 const express = require('express');
 const app = express();
-
 const dotenv = require("dotenv");
 const logger = require('./middleware/logger')
 dotenv.config();
+app.set('view engine','ejs')
 const bookpath = require('./routes/book')
 const authorspath = require('./routes/authors')
 const autpath  = require('./routes/auth')
@@ -18,7 +18,7 @@ app.use("/api/books",bookpath);
 app.use("/api/authors",authorspath);
 app.use("/api/auth",autpath);
 app.use("/api/user",userpath);
-
+app.use("/password",require("./routes/password.js"));
 
 
 

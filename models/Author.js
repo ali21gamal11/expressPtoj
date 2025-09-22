@@ -2,23 +2,33 @@ const mongoose = require("mongoose");
 const joi = require('joi');
 
 const authorschema = new mongoose.Schema({
-    name:{
+    firstName:{
         type: String,
         required: true,
         trim: true,
         minLength:3,
         maxLength:20,
     },
-
+    lastName:{
+        type: String,
+        required: true,
+        trim: true,
+        minLength:3,
+        maxLength:20,
+    },
+    nationality:{
+        type: String,
+        required: true,
+        trim: true,
+        minLength:3,
+        maxLength:20,
+    },
     age:{
         type:Number,
-        required:true,
         trim:true,
         min:18,
         max:120,
-
-
-    }
+    },
 },
 {   
     timestamps:true
