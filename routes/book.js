@@ -10,10 +10,10 @@ const { getAllBooks,getBookById,creatBook,editBook,deleteBook } = require("../co
 /**
  * @desc get all books
  * @route api/books
- * @method GE
+ * @method GET
  * @access public
  */
-router.ge("/",getAllBooks);
+router.get("/",getAllBooks);
 
 /**
  * @desc add a new book

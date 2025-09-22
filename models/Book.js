@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const joi = require('oi');
+const joi = require('joi');
 
 const bookschema = new mongoose.Schema({
     title:{
