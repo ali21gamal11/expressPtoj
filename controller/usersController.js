@@ -39,7 +39,7 @@ const creatUser = async (req,res)=>{
     }
 }
 
-const geUserById = async(req,res)=>{
+const getUserById = async(req,res)=>{
     try{
         const userId = req.params.id;
         const user = await User.findById(userId).select("-password");
